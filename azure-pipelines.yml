@@ -1,0 +1,92 @@
+pool:
+  name: Arm64
+  vmImage: 'ubuntu-22.04'
+
+trigger:
+- main
+resources:
+- repo: self
+variables:
+  imagePullSecret: 'regcred'
+
+stages:
+- stage: Build
+  displayName: "Build and Push Docker Images"
+  jobs:
+  - job: BuildAndPush
+    displayName: "Build and Push Docker Images"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+    - task: DockerInstaller@0
+      displayName: "Install Docker CLI"
+
+    - task: Docker@2
+      displayName: "Build and Push Publisher Image"
+      inputs:
+        containerRegistry: 'DockerConnection'
+        command: "buildAndPush"
+        repository: 'manoelvsneto/DaprJavaPublisher'
+        dockerfile: "publisher/Dockerfile"
+        tags: |
+          $(Build.BuildId)
+
+    - task: Docker@2
+      displayName: "Build and Push Subscriber Image"
+      inputs:
+        containerRegistry: 'DockerConnection'
+        command: "buildAndPush"
+        repository: 'manoelvsneto/DaprJavaSubscriber'
+        dockerfile: "subscriber/Dockerfile"
+        tags: |
+          $(Build.BuildId)
+
+- stage: Deploy
+  displayName: "Deploy to Kubernetes"
+  dependsOn: Build
+  jobs:
+  - deployment: DeployKubernetes
+    displayName: "Deploy "
+  
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              kubernetesServiceConnection: K8SOracleCloud
+              action: createSecret
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: 'DockerConnection'
+
+          - task: KubernetesManifest@0
+            displayName: "Deploy Redis"
+            inputs:
+              manifests: |
+                kubernetes/redis/redis-deployment.yaml
+                kubernetes/redis/redis-service.yaml
+
+          - task: KubernetesManifest@0
+            displayName: "Deploy Publisher"
+            inputs:
+              manifests: |
+                kubernetes/publisher/publisher-deployment.yaml
+                kubernetes/publisher/publisher-service.yaml
+              containers: |
+                manoelvsneto/DaprJavaPublisher:$(Build.BuildId) 
+                
+          - task: KubernetesManifest@0
+            displayName: "Deploy Subscriber"
+            inputs:
+              manifests: |
+                kubernetes/subscriber/subscriber-deployment.yaml
+                kubernetes/subscriber/subscriber-service.yaml
+              containers: |
+                manoelvsneto/DaprJavaSubscriber:$(Build.BuildId) 
+
+          - task: KubernetesManifest@0
+            displayName: "Deploy Ingress"
+            inputs:
+              manifests: |
+                kubernetes/ingress/ingress.yaml
