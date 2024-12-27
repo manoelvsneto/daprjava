@@ -16,7 +16,8 @@ stages:
   - job: BuildAndPush
     displayName: "Build and Push Docker Images"
     pool:
-      vmImage: "ubuntu-latest"
+      name: Arm64
+      vmImage: 'ubuntu-22.04'
     steps:
     - task: DockerInstaller@0
       displayName: "Install Docker CLI"
