@@ -46,7 +46,8 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: DeployKubernetes
-    displayName: "Deploy "
+    displayName: "Deploy"
+    environment: "prod"
   
     strategy:
       runOnce:
