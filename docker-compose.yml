@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server"]
+
+  publisher:
+    build:
+      context: ./publisher
+    container_name: publisher
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    volumes:
+      - ./components:/components
+    environment:
+      DAPR_HTTP_PORT: 3501
+      DAPR_GRPC_PORT: 50001
+    command: >
+      dapr run --app-id publisher --app-port 8081
+      --components-path /components
+      java -jar app.jar
+
+  subscriber:
+    build:
+      context: ./subscriber
+    container_name: subscriber
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    volumes:
+      - ./components:/components
+    environment:
+      DAPR_HTTP_PORT: 3500
+      DAPR_GRPC_PORT: 50000
+    command: >
+      dapr run --app-id subscriber --app-port 8080
+      --components-path /components
+      java -jar app.jar
+
+volumes:
+  redis-data:

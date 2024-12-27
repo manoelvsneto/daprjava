@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriber
+  labels:
+    app: subscriber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscriber
+  template:
+    metadata:
+      labels:
+        app: subscriber
+    spec:
+      containers:
+      - name: subscriber
+        image: subscriber:latest # Substitua pela imagem Docker do Subscriber
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DAPR_HTTP_PORT
+          value: "3500"
+        - name: DAPR_GRPC_PORT
+          value: "50000"
+        command:
+        - dapr
+        args:
+        - run
+        - --app-id
+        - subscriber
+        - --app-port
+        - "8080"
+        - --components-path
+        - /components
+        - --dapr-http-port
+        - "3500"
+        - --dapr-grpc-port
+        - "50000"
