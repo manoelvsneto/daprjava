@@ -29,7 +29,7 @@ stages:
         containerRegistry: 'DockerConnection'
         command: "buildAndPush"
         repository: 'manoelvsneto/DaprJavaPublisher'
-        dockerfile: "**/publisher/Dockerfile"
+        dockerfile: "../publisher/Dockerfile"
         tags: |
           $(Build.BuildId)
 
@@ -39,7 +39,7 @@ stages:
         containerRegistry: 'DockerConnection'
         command: "buildAndPush"
         repository: 'manoelvsneto/DaprJavaSubscriber'
-        dockerfile: "**/subscriber/Dockerfile"
+        dockerfile: "../subscriber/Dockerfile"
         tags: |
           $(Build.BuildId)
 
