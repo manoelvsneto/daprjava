@@ -1,12 +1,11 @@
-# Usar a imagem do OpenJDK
-FROM openjdk:17-jdk-slim
+# Use uma imagem base do JDK para execução
+FROM openjdk:11-jre-slim
 
-# Copiar o código para o contêiner
+# Diretório de trabalho
 WORKDIR /app
-COPY build/libs/PubSubDapr.jar app.jar
 
-# Expor a porta do Publisher
-EXPOSE 8081
+# Copiar o JAR gerado pelo Gradle
+COPY build/libs/publisher-*.jar app.jar
 
-# Comando para iniciar a aplicação com o Dapr
+# Comando para executar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
