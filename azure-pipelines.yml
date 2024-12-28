@@ -24,9 +24,9 @@ stages:
       condition: 
     # Checkout do código
     - task: JavaToolInstaller@0
-      displayName: "Set Java 21"
+      displayName: "Set Java 11"
       inputs:
-        versionSpec: '21'
+        versionSpec: '11'
         jdkArchitectureOption: 'x64'
         jdkSourceOption:  'PreInstalled'
 
