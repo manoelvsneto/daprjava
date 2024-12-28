@@ -3,7 +3,7 @@ FROM openjdk:17-jdk-slim
 
 # Copiar o código para o contêiner
 WORKDIR /app
-COPY build/libs/publisher-1.0.0.jar app.jar
+COPY build/libs/PubSubDapr.jar app.jar
 
 # Expor a porta do Publisher
 EXPOSE 8081
