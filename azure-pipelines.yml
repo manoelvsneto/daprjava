@@ -29,17 +29,7 @@ stages:
         containerRegistry: 'DockerConnection'
         command: "buildAndPush"
         repository: 'manoelvsneto/DaprJavaPublisher'
-        dockerfile: "../publisher/Dockerfile"
-        tags: |
-          $(Build.BuildId)
-
-    - task: Docker@2
-      displayName: "Build and Push Subscriber Image"
-      inputs:
-        containerRegistry: 'DockerConnection'
-        command: "buildAndPush"
-        repository: 'manoelvsneto/DaprJavaSubscriber'
-        dockerfile: "../subscriber/Dockerfile"
+        Dockerfile: '$(Build.SourcesDirectory)/publisher/Dockerfile'
         tags: |
           $(Build.BuildId)
 
@@ -79,14 +69,6 @@ stages:
               containers: |
                 manoelvsneto/DaprJavaPublisher:$(Build.BuildId) 
                 
-          - task: KubernetesManifest@0
-            displayName: "Deploy Subscriber"
-            inputs:
-              manifests: |
-                kubernetes/subscriber/subscriber-deployment.yaml
-                kubernetes/subscriber/subscriber-service.yaml
-              containers: |
-                manoelvsneto/DaprJavaSubscriber:$(Build.BuildId) 
 
           - task: KubernetesManifest@0
             displayName: "Deploy Ingress"
