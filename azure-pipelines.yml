@@ -21,14 +21,15 @@ stages:
     steps:
     - task: DockerInstaller@0
       displayName: "Install Docker CLI"
-
+      condition: 
+    
     - task: Docker@2
       displayName: "Build and Push Publisher Image"
       inputs:
         containerRegistry: 'DockerConnection'
         command: "buildAndPush"
         repository: 'manoelvsneto/DaprJavaPublisher'
-        dockerfile: "publisher/Dockerfile"
+        dockerfile: "**/publisher/Dockerfile"
         tags: |
           $(Build.BuildId)
 
@@ -38,7 +39,7 @@ stages:
         containerRegistry: 'DockerConnection'
         command: "buildAndPush"
         repository: 'manoelvsneto/DaprJavaSubscriber'
-        dockerfile: "subscriber/Dockerfile"
+        dockerfile: "**/subscriber/Dockerfile"
         tags: |
           $(Build.BuildId)
 
