@@ -26,8 +26,9 @@ stages:
 
     # Build do projeto Publisher
     - script: |
-        cd publisher
-        ./gradlew clean build -x test
+         cd publisher
+         chmod +x ./gradlew
+         ./gradlew clean build -x test
       displayName: "Build Publisher Project"
     - task: Docker@2
       displayName: "Build and Push Publisher Image"
