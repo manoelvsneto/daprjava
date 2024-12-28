@@ -1,8 +1,9 @@
-# Use uma imagem base do JDK para execução
-FROM openjdk:11-jre-slim
+# Use uma imagem base com suporte ARM64
+FROM --platform=linux/arm64 openjdk:11-jre-slim
 
 # Diretório de trabalho
 WORKDIR /app
+
 
 # Copiar o JAR gerado pelo Gradle
 COPY build/libs/publisher-*.jar app.jar
