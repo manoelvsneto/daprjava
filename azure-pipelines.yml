@@ -28,6 +28,7 @@ stages:
       inputs:
         versionSpec: '11'
         jdkArchitectureOption: 'x64'
+        jdkSourceOption:  'PreInstalled'
 
     # Build do projeto Publisher
     - script: |
