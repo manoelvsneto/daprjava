@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: publisher
-        image: manoelvsneto/daprjavapublisher:$(Build.BuildId) 
+        image: manoelvsneto/daprjavapublisher
         ports:
         - containerPort: 8080
         env:
