@@ -1,12 +1,14 @@
-# Use uma imagem base com suporte ARM64
+# Use an ARM64-compatible base image
 FROM --platform=linux/arm64 openjdk:11-jre-slim
 
-# Diretório de trabalho
+# Set the working directory
 WORKDIR /app
 
+# Copy the JAR file(s) to the working directory
+COPY build/libs/PubSubDapr-*.jar /app/
 
-# Copiar o JAR gerado pelo Gradle
-COPY build/libs/PubSubDapr-*.jar app.jar
+# Rename the JAR file if there's only one
+RUN mv /app/PubSubDapr-*.jar /app/app.jar
 
-# Comando para executar a aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
