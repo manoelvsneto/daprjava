@@ -1,13 +1,13 @@
-FROM quay.io/wildfly/wildfly:29.0.1.Final-jdk17
+FROM tomcat:10.1-jdk17
 
-# Diretório de trabalho no WildFly
-WORKDIR /opt/jboss/wildfly/standalone/deployments/
+# Remover os arquivos de exemplo padrão do Tomcat
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copia o WAR para a pasta de deploy do WildFly
-COPY build/libs/PubSubDapr-*.war ./app.war
+# Copiar o WAR gerado para o diretório de deploy do Tomcat
+COPY build/libs/PubSubDapr-*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expor a porta padrão do WildFly
+# Expor a porta padrão do Tomcat
 EXPOSE 8080
 
-# Comando para iniciar o WildFly
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
+# Iniciar o Tomcat
+CMD ["catalina.sh", "run"]
