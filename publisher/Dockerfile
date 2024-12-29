@@ -1,4 +1,4 @@
-FROM adoptopenjdk:11-jre-hotspot
+FROM eclipse-temurin:17-jdk-jammy
 # Set the working directory
 WORKDIR /app
 # Copy the JAR file to the container
