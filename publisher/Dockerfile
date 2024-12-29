@@ -1,5 +1,5 @@
 # Etapa 1: Usar uma imagem base com JDK 17
-FROM eclipse-temurin:17-jdk-jammy-arm64 as builder
+FROM openjdk:17-jdk-slim-buster as builder
 # Diretório de trabalho dentro da imagem
 WORKDIR /app
 # Copiar o arquivo WAR gerado para dentro da imagem
