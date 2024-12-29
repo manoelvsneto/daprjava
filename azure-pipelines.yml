@@ -24,11 +24,11 @@ stages:
       condition: 
     # Checkout do código
     - task: JavaToolInstaller@0
-      displayName: "Set Java 11"
+      displayName: "Set Java"
       inputs:
-        versionSpec: '11'
+        versionSpec: '17'
         jdkArchitectureOption: 'x64'
-        jdkSourceOption:  'LocalDirectory'
+        jdkSourceOption:  'PreInstalled'
 
     # Build do projeto Publisher
     - script: |
