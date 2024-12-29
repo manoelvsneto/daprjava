@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: publisher
-        image: manoelvsneto/daprjavapublisher:latest # Substitua pela imagem Docker do Publisher
+        image: manoelvsneto/daprjavapublisher 
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
         env:
         - name: DAPR_HTTP_PORT
           value: "3501"
