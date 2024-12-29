@@ -21,7 +21,13 @@ stages:
     steps:
     - task: DockerInstaller@0
       displayName: "Install Docker CLI"
-   
+  
+    - script: |
+        sudo apt update
+        sudo apt install -y openjdk-8-jdk
+        echo "##vso[task.setvariable variable=JAVA_HOME]$(readlink -f /usr/bin/java | sed "s:bin/java::")"
+        echo "Java 8 installed successfully"
+      displayName: 'Install Java 8'
 
     # Checkout do código
     - task: JavaToolInstaller@0
@@ -37,6 +43,7 @@ stages:
          chmod +x ./gradlew
          ./gradlew clean build -x test
       displayName: "Build Publisher Project"
+    
     - task: Docker@2
       displayName: "Build and Push Publisher Image"
       inputs:
