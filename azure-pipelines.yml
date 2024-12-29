@@ -64,7 +64,6 @@ stages:
 
     - task: KubernetesManifest@0
       displayName: "Deploy Publisher"
-      action: deploy
       inputs:
         kubernetesServiceConnection: K8SOracleCloud
         manifests: |
@@ -74,12 +73,9 @@ stages:
         imagePullSecrets: |
           $(imagePullSecret)
 
-      - task: KubernetesManifest@0
-        displayName: "Deploy Ingress"
-        action: deploy
-        imagePullSecrets: |
-          $(imagePullSecret)
-        inputs:
-          kubernetesServiceConnection: K8SOracleCloud
-          manifests: |
+    - task: KubernetesManifest@0
+      displayName: "Deploy Ingress"
+      inputs:
+        kubernetesServiceConnection: K8SOracleCloud
+        manifests: |
             $(Build.SourcesDirectory)/**/ingress/ingress.yaml
