@@ -43,8 +43,7 @@ stages:
         repository: 'manoelvsneto/DaprJavaPublisher'
         Dockerfile: '$(Build.SourcesDirectory)/**/publisher/Dockerfile'
         arguments: "--platform linux/arm64"
-        tags: |
-          $(Build.BuildId)
+        tags:  $(Build.BuildId)
 
     - task: KubernetesManifest@0
       displayName: Create imagePullSecret
@@ -55,27 +54,14 @@ stages:
         dockerRegistryEndpoint: 'DockerConnection'
 
     - task: KubernetesManifest@0
-      displayName: "Deploy Redis"
-      inputs:
-        kubernetesServiceConnection: K8SOracleCloud
-        manifests: |
-          $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
-          $(Build.SourcesDirectory)/**/redis/redis-service.yaml
-
-    - task: KubernetesManifest@0
       displayName: "Deploy Publisher"
       inputs:
         kubernetesServiceConnection: K8SOracleCloud
+        action: deploy
         manifests: |
           $(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml
           $(Build.SourcesDirectory)/**/publisher/publisher-service.yaml
-        containers: 'manoelvsneto/DaprJavaPublisher:$(Build.BuildId)'
-        imagePullSecrets: |
-          $(imagePullSecret)
-
-    - task: KubernetesManifest@0
-      displayName: "Deploy Ingress"
-      inputs:
-        kubernetesServiceConnection: K8SOracleCloud
-        manifests: |
-            $(Build.SourcesDirectory)/**/ingress/ingress.yaml
+          $(Build.SourcesDirectory)/**/ingress/ingress.yaml
+          $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
+          $(Build.SourcesDirectory)/**/redis/redis-service.yaml
+        containers: 'manoelvsneto/daprjavapublisher:$(Build.BuildId)'
