@@ -1,16 +1,9 @@
-# Etapa 1: Base de execução com o JDK 17
-FROM eclipse-temurin:17-jdk-jammy as runtime
-
-# Diretório de trabalho dentro da imagem
+FROM adoptopenjdk:11-jre-hotspot
+# Set the working directory
 WORKDIR /app
-
-# Copiar o único arquivo WAR gerado pelo Gradle
-# Ajuste o nome do arquivo WAR se necessário
-COPY build/libs/app.war /app/app.war
-
-# Expor a porta usada pela aplicação
+# Copy the JAR file to the container
+COPY build/libs/PubSubDapr-0.0.1-SNAPSHOT.war /app/app.war
+# Expose the port that your Spring Boot application listens on (default is 8080)
 EXPOSE 8080
-
-# Comando para iniciar a aplicação
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.war"]
-
+# Define the command to run your application
+CMD ["java", "-jar", "app.war"]
