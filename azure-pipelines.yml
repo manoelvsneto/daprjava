@@ -29,7 +29,6 @@ stages:
         echo "Java 8 installed successfully"
       displayName: 'Install Java 8'
 
-    # Build do projeto Publisher
     - script: |
          cd publisher
          chmod +x ./gradlew
@@ -47,49 +46,40 @@ stages:
         tags: |
           $(Build.BuildId)
 
-- stage: Deploy
-  displayName: "Deploy to Kubernetes"
-  dependsOn: Build
-  jobs:
-  - deployment: DeployKubernetes
-    displayName: "Deploy"
-    environment: "prod"
-  
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
-            inputs:
-              kubernetesServiceConnection: K8SOracleCloud
-              action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: 'DockerConnection'
+    - task: KubernetesManifest@0
+      displayName: Create imagePullSecret
+      inputs:
+        kubernetesServiceConnection: K8SOracleCloud
+        action: createSecret
+        secretName: $(imagePullSecret)
+        dockerRegistryEndpoint: 'DockerConnection'
 
-          - task: KubernetesManifest@0
-            displayName: "Deploy Redis"
-            inputs:
-              kubernetesServiceConnection: K8SOracleCloud
-              manifests: |
-                $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
-                $(Build.SourcesDirectory)/**/redis/redis-service.yaml
+    - task: KubernetesManifest@0
+      displayName: "Deploy Redis"
+      inputs:
+        kubernetesServiceConnection: K8SOracleCloud
+        manifests: |
+          $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
+          $(Build.SourcesDirectory)/**/redis/redis-service.yaml
 
+    - task: KubernetesManifest@0
+      displayName: "Deploy Publisher"
+      action: deploy
+      inputs:
+        kubernetesServiceConnection: K8SOracleCloud
+        manifests: |
+          $(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml
+          $(Build.SourcesDirectory)/**/publisher/publisher-service.yaml
+        containers: 'manoelvsneto/DaprJavaPublisher:$(Build.BuildId)'
+        imagePullSecrets: |
+          $(imagePullSecret)
 
-          - task: KubernetesManifest@0
-            displayName: "Deploy Publisher"
-            inputs:
-              kubernetesServiceConnection: K8SOracleCloud
-              manifests: |
-                $(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml
-                $(Build.SourcesDirectory)/**/publisher/publisher-service.yaml
-              containers: |
-                manoelvsneto/DaprJavaPublisher:$(Build.BuildId) 
-                
-
-          - task: KubernetesManifest@0
-            displayName: "Deploy Ingress"
-            inputs:
-              kubernetesServiceConnection: K8SOracleCloud
-              manifests: |
-                $(Build.SourcesDirectory)/**/ingress/ingress.yaml
+      - task: KubernetesManifest@0
+        displayName: "Deploy Ingress"
+        action: deploy
+        imagePullSecrets: |
+          $(imagePullSecret)
+        inputs:
+          kubernetesServiceConnection: K8SOracleCloud
+          manifests: |
+            $(Build.SourcesDirectory)/**/ingress/ingress.yaml
