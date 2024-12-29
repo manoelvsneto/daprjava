@@ -7,8 +7,10 @@ WORKDIR /app
 # Copy the JAR file(s) to the working directory
 COPY build/libs/PubSubDapr-*.jar /app/
 
-# Rename the JAR file if there's only one
-RUN mv /app/PubSubDapr-*.jar /app/app.jar
+# Handle cases where multiple files might match or no files exist
+RUN set -e && \
+    FILE=$(ls /app/PubSubDapr-*.jar 2>/dev/null || echo "") && \
+    if [ -n "$FILE" ]; then mv "$FILE" /app/app.jar; else echo "No matching JAR file found"; fi
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
