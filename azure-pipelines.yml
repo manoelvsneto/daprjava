@@ -21,12 +21,13 @@ stages:
     steps:
     - task: DockerInstaller@0
       displayName: "Install Docker CLI"
-      condition: 
+   
+
     # Checkout do código
     - task: JavaToolInstaller@0
       displayName: "Set Java"
       inputs:
-        versionSpec: '17'
+        #versionSpec: '17'
         jdkArchitectureOption: 'x64'
         jdkSourceOption:  'PreInstalled'
 
