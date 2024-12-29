@@ -6,7 +6,7 @@ WORKDIR /app
 
 
 # Copiar o JAR gerado pelo Gradle
-COPY build/libs/publisher-*.jar app.jar
+COPY build/libs/PubSubDapr-*.jar app.jar
 
 # Comando para executar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
