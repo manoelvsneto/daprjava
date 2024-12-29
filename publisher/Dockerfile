@@ -1,14 +1,13 @@
-FROM openjdk:17-jdk-slim
+FROM quay.io/wildfly/wildfly:29.0.1.Final-jdk17
 
-WORKDIR /app
+# Diretório de trabalho no WildFly
+WORKDIR /opt/jboss/wildfly/standalone/deployments/
 
-# Copy the JAR files
-COPY build/libs/PubSubDapr-*.jar /app/
+# Copia o WAR para a pasta de deploy do WildFly
+COPY build/libs/PubSubDapr-*.war ./app.war
 
-# Ensure a single JAR file is moved to app.jar
-RUN for file in /app/PubSubDapr-*.jar; do \
-      if [ -f "$file" ]; then cp "$file" /app/app.jar; fi; \
-    done
+# Expor a porta padrão do WildFly
+EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
+# Comando para iniciar o WildFly
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
