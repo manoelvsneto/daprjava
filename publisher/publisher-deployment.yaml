@@ -19,22 +19,3 @@ spec:
         image: manoelvsneto/daprjavapublisher
         ports:
         - containerPort: 8080
-        env:
-        - name: DAPR_HTTP_PORT
-          value: "3501"
-        - name: DAPR_GRPC_PORT
-          value: "50001"
-        command:
-        - dapr
-        args:
-        - run
-        - --app-id
-        - publisher
-        - --app-port
-        - "8081"
-        - --components-path
-        - /components
-        - --dapr-http-port
-        - "3501"
-        - --dapr-grpc-port
-        - "50001"
