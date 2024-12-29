@@ -70,6 +70,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: "Deploy Redis"
             inputs:
+              kubernetesServiceConnection: K8SOracleCloud
               manifests: |
                 kubernetes/redis/redis-deployment.yaml
                 kubernetes/redis/redis-service.yaml
@@ -77,6 +78,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: "Deploy Publisher"
             inputs:
+              kubernetesServiceConnection: K8SOracleCloud
               manifests: |
                 kubernetes/publisher/publisher-deployment.yaml
                 kubernetes/publisher/publisher-service.yaml
@@ -87,5 +89,6 @@ stages:
           - task: KubernetesManifest@0
             displayName: "Deploy Ingress"
             inputs:
+              kubernetesServiceConnection: K8SOracleCloud
               manifests: |
                 kubernetes/ingress/ingress.yaml
