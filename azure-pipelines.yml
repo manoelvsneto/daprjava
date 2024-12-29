@@ -30,12 +30,12 @@ stages:
       displayName: 'Install Java 8'
 
     # Checkout do código
-    - task: JavaToolInstaller@0
-      displayName: "Set Java"
-      inputs:
-        #versionSpec: '17'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption:  'PreInstalled'
+    # - task: JavaToolInstaller@0
+    #  displayName: "Set Java"
+    #  inputs:
+    #    #versionSpec: '17'
+    #    jdkArchitectureOption: 'x64'
+    #    jdkSourceOption:  'PreInstalled'
 
     # Build do projeto Publisher
     - script: |
