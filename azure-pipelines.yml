@@ -72,8 +72,8 @@ stages:
             inputs:
               kubernetesServiceConnection: K8SOracleCloud
               manifests: |
-                '$(Build.SourcesDirectory)/**/redis/redis-deployment.yaml'
-                '$(Build.SourcesDirectory)/**/redis/redis-service.yaml'
+                $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
+                $(Build.SourcesDirectory)/**/redis/redis-service.yaml
 
 
           - task: KubernetesManifest@0
@@ -81,8 +81,8 @@ stages:
             inputs:
               kubernetesServiceConnection: K8SOracleCloud
               manifests: |
-                '$(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml'
-                '$(Build.SourcesDirectory)/**/publisher/publisher-service.yaml'
+                $(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml
+                $(Build.SourcesDirectory)/**/publisher/publisher-service.yaml
               containers: |
                 manoelvsneto/DaprJavaPublisher:$(Build.BuildId) 
                 
@@ -92,4 +92,4 @@ stages:
             inputs:
               kubernetesServiceConnection: K8SOracleCloud
               manifests: |
-                '$(Build.SourcesDirectory)/**/ingress/ingress.yaml'
+                $(Build.SourcesDirectory)/**/ingress/ingress.yaml
