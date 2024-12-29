@@ -1,9 +1,10 @@
-FROM eclipse-temurin:17-jdk-jammy
-# Set the working directory
+# Etapa 1: Usar uma imagem base com JDK 17
+FROM eclipse-temurin:17-jdk-jammy as builder
+# Diretório de trabalho dentro da imagem
 WORKDIR /app
-# Copy the JAR file to the container
+# Copiar o arquivo WAR gerado para dentro da imagem
 COPY build/libs/PubSubDapr-0.0.1-SNAPSHOT.war /app/app.war
-# Expose the port that your Spring Boot application listens on (default is 8080)
+# Expor a porta 8080
 EXPOSE 8080
-# Define the command to run your application
-CMD ["java", "-jar", "app.war"]
+# Comando para rodar a aplicação
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.war"]
