@@ -4,7 +4,9 @@ metadata:
   name: publisher
 spec:
   ports:
-  - port: 8080
+  - name: http
+    port: 8080
     targetPort: 8080
-  selector:
-    app: publisher
+    nodePort: 32099
+    protocol: TCP
+  type: NodePort
