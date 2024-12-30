@@ -46,7 +46,6 @@ stages:
         tags:  $(Build.BuildId)
     
     - script: |
-         cd ..
          cd subscriber
          chmod +x ./gradlew
          ./gradlew clean build -x test
@@ -70,7 +69,7 @@ stages:
         dockerRegistryEndpoint: 'DockerConnection'
 
     - task: KubernetesManifest@0
-      displayName: "Deploy Publisher"
+      displayName: "Deploy"
       inputs:
         kubernetesServiceConnection: K8SOracleCloud
         action: deploy
