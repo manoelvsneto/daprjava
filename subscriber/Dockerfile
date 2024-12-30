@@ -1,12 +1,10 @@
-# Usar a imagem do OpenJDK
-FROM openjdk:17-jdk-slim
-
-# Copiar o código para o contêiner
+# Etapa 1: Usar uma imagem base com JDK 17
+FROM openjdk:17-jdk-slim-buster as builder
+# Diretório de trabalho dentro da imagem
 WORKDIR /app
-COPY build/libs/subscriber-1.0.0.jar app.jar
-
-# Expor a porta do Subscriber
+# Copiar o arquivo WAR gerado para dentro da imagem
+COPY build/libs/SubPubDapr-0.0.1-SNAPSHOT.war /app/app.war
+# Expor a porta 8080
 EXPOSE 8080
-
-# Comando para iniciar a aplicação com o Dapr
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Comando para rodar a aplicação
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.war"]

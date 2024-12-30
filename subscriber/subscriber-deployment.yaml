@@ -15,26 +15,7 @@ spec:
         app: subscriber
     spec:
       containers:
-      - name: subscriber
-        image: subscriber:latest # Substitua pela imagem Docker do Subscriber
+      - name: publisher
+        image: manoelvsneto/daprjavasubscriber
         ports:
         - containerPort: 8080
-        env:
-        - name: DAPR_HTTP_PORT
-          value: "3500"
-        - name: DAPR_GRPC_PORT
-          value: "50000"
-        command:
-        - dapr
-        args:
-        - run
-        - --app-id
-        - subscriber
-        - --app-port
-        - "8080"
-        - --components-path
-        - /components
-        - --dapr-http-port
-        - "3500"
-        - --dapr-grpc-port
-        - "50000"

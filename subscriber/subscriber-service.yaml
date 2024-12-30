@@ -4,7 +4,9 @@ metadata:
   name: subscriber
 spec:
   ports:
-  - port: 8080
+  - name: http
+    port: 8080
     targetPort: 8080
-  selector:
-    app: subscriber
+    nodePort: 32100
+    protocol: TCP
+  type: NodePort
