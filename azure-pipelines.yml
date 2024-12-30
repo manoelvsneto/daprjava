@@ -44,7 +44,23 @@ stages:
         Dockerfile: '$(Build.SourcesDirectory)/**/publisher/Dockerfile'
         arguments: "--platform linux/arm64"
         tags:  $(Build.BuildId)
-
+    
+    - script: |
+         cd ..
+         cd subscriber
+         chmod +x ./gradlew
+         ./gradlew clean build -x test
+      displayName: "Build Subscriber Project"
+    - task: Docker@2
+      displayName: "Build and Push Subscriber Image"
+      inputs:
+        containerRegistry: 'DockerConnection'
+        command: "buildAndPush"
+        repository: 'manoelvsneto/DaprJavaSubscriber'
+        Dockerfile: '$(Build.SourcesDirectory)/**/subscriber/Dockerfile'
+        arguments: "--platform linux/arm64"
+        tags:  $(Build.BuildId)
+        
     - task: KubernetesManifest@0
       displayName: Create imagePullSecret
       inputs:
@@ -61,6 +77,8 @@ stages:
         manifests: |
           $(Build.SourcesDirectory)/**/publisher/publisher-deployment.yaml
           $(Build.SourcesDirectory)/**/publisher/publisher-service.yaml
+          $(Build.SourcesDirectory)/**/subscriber/subscriber-deployment.yaml
+          $(Build.SourcesDirectory)/**/subscriber/subscriber-service.yaml
           $(Build.SourcesDirectory)/**/ingress/ingress.yaml
           $(Build.SourcesDirectory)/**/redis/redis-deployment.yaml
           $(Build.SourcesDirectory)/**/redis/redis-service.yaml
