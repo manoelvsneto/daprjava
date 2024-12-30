@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: publisher.example.com
+  - host: backend.archse.eng.br
     http:
       paths:
       - path: /
@@ -15,8 +15,8 @@ spec:
           service:
             name: publisher
             port:
-              number: 8081
-  - host: subscriber.example.com
+              name: http
+  - host: backend.archse.eng.br
     http:
       paths:
       - path: /
@@ -25,4 +25,4 @@ spec:
           service:
             name: subscriber
             port:
-              number: 8080
+              name: http
